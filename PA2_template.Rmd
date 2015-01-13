@@ -1,0 +1,146 @@
+Reproducible Research: Peer Assessment 2
+==========================================
+Created by Simon Mackinnon on January 13, 2015
+[Reproducable Research - Coursera](https://www.coursera.org/course/repdata)
+
+## Economic and Public Health Effects of Storms and Other Severe Weather Events 
+
+### Synopsis
+
+
+### Settings
+```{r settings}
+options(scipen = 999) 
+library(R.utils)
+library(lubridate)
+library(ggplot2)
+```
+
+### Data Processing
+The data to be used for this analysis is available for download via the course website at [Storm Data](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2).    
+
+If the .csv file isn't already extracted, and the zip file doesn't exist, then we should download and then extract it.
+```{r downloadingAndExtracting, echo=TRUE}
+zip_filename <- "data/repdata-data-StormData.csv.bz2"
+data_filename <- "data/repdata-data-StormData.csv"
+
+if (!file.exists(data_filename))
+{
+  if (!file.exists(zip_filename))
+  {
+    url <- "http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
+    #record the time/location of the downloaded file
+    print (paste("Downloading file from:", url ,"at:", format(Sys.Date(), "%B %d, %Y"), format(Sys.time(), "%H:%M:%S")))
+    #changed url to be http, as download file has issues with https
+    
+    download.file(url, 
+                  destfile = zip_filename,
+                  mode="wb")
+  }
+  
+  bunzip2(zip_filename, overwrite=T, remove=F)
+}
+```
+
+Once we have the .csv file, we need to read it into R.
+
+```{r dataReading, echo=TRUE, cache=TRUE}
+# this may take some time!
+stormData <- read.csv(data_filename, 
+                      header=TRUE, 
+                      sep=",",
+                      stringsAsFactors=FALSE)
+
+#confirm the number dimensions of the read data
+dim(stormData)
+
+#and display the head rows
+head(stormData)
+
+```
+There are **`r nrow(stormData)` rows** and **`r ncol(stormData)` columns** in the read data.
+
+
+### Data Selection and Filtering
+
+Looking at the details of how the data was collected at the [Storm Events Database](http://www.ncdc.noaa.gov/stormevents/details.jsp), we can see that only observations from 1996 onwards includes data from *All Event Types (48 from Directive 10-1605)*, (as defined in [NWS Directive 10-1605](http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf)).  
+
+We can verify that most of the observations were recorded after this date as well, by observing the frequency of observations per year in the **stormData$BGN_DATE** variable
+
+```{r observationFrequencyPerYear, echo=TRUE, fig.align='center', fig.width=7, fig.height=5}
+
+year <- year(as.Date(stormData$BGN_DATE, format = "%m/%d/%Y"))
+
+#break up the year data into 3 types
+yearType <- as.numeric(year)
+
+for (i in seq_along(year))
+{  
+  if (year[i] <= 1955)
+  {
+    yearType[i] <- 1
+  }
+  else if (year[i] <= 1996)
+  {
+    yearType[i] <- 2
+  }
+  else if (year[i] <= 2011)
+  {
+    yearType[i] <-3
+  }
+  else
+  {
+    yearType[i] <- 0
+  }
+}
+
+#bind into a marix, then coerce to a data fram
+yearData <- data.frame(cbind(year, yearType))
+
+# hist(yearData$year, 
+#      breaks = as.numeric(max(yearData$year))-as.numeric(min(yearData$year)),
+#      main = "Histogram of Number of\nObservarions Recorded Per Year (1950 - 2011)",
+#      xlab = "Year",
+#      ylab = "Number of Observations Recorded")
+
+#create the histogram
+m <- ggplot(yearData, aes(x=year)) + 
+  geom_histogram(binwidth = 1, aes(fill = factor(yearData$yearType))) +
+  scale_fill_discrete(  name="Year Type",                        
+                        labels= c("1. Tornado\n", 
+                                  "2. Tornado,\nThunderstorm Wind\nand Hail\n", 
+                                  "3. All Event\nTypes (48 from\nDirective 10-1605)\n"))
+#and output
+m
+
+```
+
+Based on this, we filter the data to only use observations from 1996 onwards.
+
+```{r dataFiltering, echo=TRUE}
+#copy of the originally read data
+stormDataOrig <- stormData
+#append the year values for filtering
+stormData$year <- year
+#subset the data for all values of year greater or equal to 1996
+stormData <- stormData[stormData$year >= 1996,]
+#display the dimensions of the filtered data
+dim(storm)
+```
+After filtering, there are **`r nrow(stormData)` rows** and **`r ncol(stormData)` columns** in the filtered data.
+
+### Results
+
+#### Economic Effects
+```{r EconomicEffects, echo=TRUE}
+
+```
+
+
+#### Public Health Effects
+```{r Public Health Effects, echo=TRUE}
+
+```
+
+
+
