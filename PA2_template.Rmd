@@ -21,8 +21,13 @@ The data to be used for this analysis is available for download via the course w
 
 If the .csv file isn't already extracted, and the zip file doesn't exist, then we should download and then extract it.
 ```{r downloadingAndExtracting, echo=TRUE}
-zip_filename <- "data/repdata-data-StormData.csv.bz2"
-data_filename <- "data/repdata-data-StormData.csv"
+zip_filename <- "./data/repdata-data-StormData.csv.bz2"
+data_filename <- "./data/repdata-data-StormData.csv"
+
+if (!file.exists("./data"))
+{
+  dir.create("./data")
+}
 
 if (!file.exists(data_filename))
 {
@@ -41,6 +46,8 @@ if (!file.exists(data_filename))
   bunzip2(zip_filename, overwrite=T, remove=F)
 }
 ```
+
+
 
 Once we have the .csv file, we need to read it into R.
 
@@ -125,20 +132,29 @@ stormData$year <- year
 #subset the data for all values of year greater or equal to 1996
 stormData <- stormData[stormData$year >= 1996,]
 #display the dimensions of the filtered data
-dim(storm)
+dim(stormData)
 ```
 After filtering, there are **`r nrow(stormData)` rows** and **`r ncol(stormData)` columns** in the filtered data.
 
 ### Results
 
 #### Economic Effects
+
+
+
 ```{r EconomicEffects, echo=TRUE}
+#subset data for crop damage cost, property damage cost (with exponents) and ev-type
+#summation aggregrate by ev-type
+#plot 
 
 ```
 
 
 #### Public Health Effects
 ```{r Public Health Effects, echo=TRUE}
+#subset data for injuries, fatalities and ev-type
+#summation aggregrate by ev-type
+#plot 
 
 ```
 
