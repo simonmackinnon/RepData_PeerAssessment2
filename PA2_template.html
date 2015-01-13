@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Reproducible Research: Peer Assessment 2</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h1>Reproducible Research: Peer Assessment 2</h1>
+
+<p>Created by Simon Mackinnon on January 13, 2015
+<a href="https://www.coursera.org/course/repdata">Reproducable Research - Coursera</a></p>
+
+<h2>Economic and Public Health Effects of Storms and Other Severe Weather Events</h2>
+
+<h3>Synopsis</h3>
+
+<h3>Settings</h3>
+
+<pre><code class="r">options(scipen = 999) 
+library(R.utils)
+library(lubridate)
+library(ggplot2)
+</code></pre>
+
+<h3>Data Processing</h3>
+
+<p>The data to be used for this analysis is available for download via the course website at <a href="https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2">Storm Data</a>.    </p>
+
+<p>If the .csv file isn&#39;t already extracted, and the zip file doesn&#39;t exist, then we should download and then extract it.</p>
+
+<pre><code class="r">zip_filename &lt;- &quot;data/repdata-data-StormData.csv.bz2&quot;
+data_filename &lt;- &quot;data/repdata-data-StormData.csv&quot;
+
+if (!file.exists(data_filename))
+{
+  if (!file.exists(zip_filename))
+  {
+    url &lt;- &quot;http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2&quot;
+    #record the time/location of the downloaded file
+    print (paste(&quot;Downloading file from:&quot;, url ,&quot;at:&quot;, format(Sys.Date(), &quot;%B %d, %Y&quot;), format(Sys.time(), &quot;%H:%M:%S&quot;)))
+    #changed url to be http, as download file has issues with https
+
+    download.file(url, 
+                  destfile = zip_filename,
+                  mode=&quot;wb&quot;)
+  }
+
+  bunzip2(zip_filename, overwrite=T, remove=F)
+}
+</code></pre>
+
+<p>Once we have the .csv file, we need to read it into R.</p>
+
+<pre><code class="r"># this may take some time!
+stormData &lt;- read.csv(data_filename, 
+                      header=TRUE, 
+                      sep=&quot;,&quot;,
+                      stringsAsFactors=FALSE)
+
+#confirm the number dimensions of the read data
+dim(stormData)
+</code></pre>
+
+<pre><code>## [1] 902297     37
+</code></pre>
+
+<pre><code class="r">#and display the head rows
+head(stormData)
+</code></pre>
+
+<pre><code>##   STATE__           BGN_DATE BGN_TIME TIME_ZONE COUNTY COUNTYNAME STATE
+## 1       1  4/18/1950 0:00:00     0130       CST     97     MOBILE    AL
+## 2       1  4/18/1950 0:00:00     0145       CST      3    BALDWIN    AL
+## 3       1  2/20/1951 0:00:00     1600       CST     57    FAYETTE    AL
+## 4       1   6/8/1951 0:00:00     0900       CST     89    MADISON    AL
+## 5       1 11/15/1951 0:00:00     1500       CST     43    CULLMAN    AL
+## 6       1 11/15/1951 0:00:00     2000       CST     77 LAUDERDALE    AL
+##    EVTYPE BGN_RANGE BGN_AZI BGN_LOCATI END_DATE END_TIME COUNTY_END
+## 1 TORNADO         0                                               0
+## 2 TORNADO         0                                               0
+## 3 TORNADO         0                                               0
+## 4 TORNADO         0                                               0
+## 5 TORNADO         0                                               0
+## 6 TORNADO         0                                               0
+##   COUNTYENDN END_RANGE END_AZI END_LOCATI LENGTH WIDTH F MAG FATALITIES
+## 1         NA         0                      14.0   100 3   0          0
+## 2         NA         0                       2.0   150 2   0          0
+## 3         NA         0                       0.1   123 2   0          0
+## 4         NA         0                       0.0   100 2   0          0
+## 5         NA         0                       0.0   150 2   0          0
+## 6         NA         0                       1.5   177 2   0          0
+##   INJURIES PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP WFO STATEOFFIC ZONENAMES
+## 1       15    25.0          K       0                                    
+## 2        0     2.5          K       0                                    
+## 3        2    25.0          K       0                                    
+## 4        2     2.5          K       0                                    
+## 5        2     2.5          K       0                                    
+## 6        6     2.5          K       0                                    
+##   LATITUDE LONGITUDE LATITUDE_E LONGITUDE_ REMARKS REFNUM
+## 1     3040      8812       3051       8806              1
+## 2     3042      8755          0          0              2
+## 3     3340      8742          0          0              3
+## 4     3458      8626          0          0              4
+## 5     3412      8642          0          0              5
+## 6     3450      8748          0          0              6
+</code></pre>
+
+<p>There are <strong>902297 rows</strong> and <strong>37 columns</strong> in the read data.</p>
+
+<h3>Data Selection and Filtering</h3>
+
+<p>Looking at the details of how the data was collected at the <a href="http://www.ncdc.noaa.gov/stormevents/details.jsp">Storm Events Database</a>, we can see that only observations from 1996 onwards includes data from <em>All Event Types (48 from Directive 10-1605)</em>, (as defined in <a href="http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf">NWS Directive 10-1605</a>).  </p>
+
+<p>We can verify that most of the observations were recorded after this date as well, by observing the frequency of observations per year in the <strong>stormData$BGN_DATE</strong> variable</p>
+
+<pre><code class="r">year &lt;- year(as.Date(stormData$BGN_DATE, format = &quot;%m/%d/%Y&quot;))
+
+#break up the year data into 3 types
+yearType &lt;- as.numeric(year)
+
+for (i in seq_along(year))
+{  
+  if (year[i] &lt;= 1955)
+  {
+    yearType[i] &lt;- 1
+  }
+  else if (year[i] &lt;= 1996)
+  {
+    yearType[i] &lt;- 2
+  }
+  else if (year[i] &lt;= 2011)
+  {
+    yearType[i] &lt;-3
+  }
+  else
+  {
+    yearType[i] &lt;- 0
+  }
+}
+
+#bind into a marix, then coerce to a data fram
+yearData &lt;- data.frame(cbind(year, yearType))
+
+# hist(yearData$year, 
+#      breaks = as.numeric(max(yearData$year))-as.numeric(min(yearData$year)),
+#      main = &quot;Histogram of Number of\nObservarions Recorded Per Year (1950 - 2011)&quot;,
+#      xlab = &quot;Year&quot;,
+#      ylab = &quot;Number of Observations Recorded&quot;)
+
+#create the histogram
+m &lt;- ggplot(yearData, aes(x=year)) + 
+  geom_histogram(binwidth = 1, aes(fill = factor(yearData$yearType))) +
+  scale_fill_discrete(  name=&quot;Year Type&quot;,                        
+                        labels= c(&quot;1. Tornado\n&quot;, 
+                                  &quot;2. Tornado,\nThunderstorm Wind\nand Hail\n&quot;, 
+                                  &quot;3. All Event\nTypes (48 from\nDirective 10-1605)\n&quot;))
+#and output
+m
+</code></pre>
+
+<p><img src="data:image/png;base64,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" title="plot of chunk observationFrequencyPerYear" alt="plot of chunk observationFrequencyPerYear" style="display: block; margin: auto;" /></p>
+
+<p>Based on this, we filter the data to only use observations from 1996 onwards.</p>
+
+<pre><code class="r">#copy of the originally read data
+stormDataOrig &lt;- stormData
+#append the year values for filtering
+stormData$year &lt;- year
+#subset the data for all values of year greater or equal to 1996
+stormData &lt;- stormData[stormData$year &gt;= 1996,]
+#display the dimensions of the filtered data
+dim(storm)
+</code></pre>
+
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;storm&#39; not found
+</code></pre>
+
+<p>After filtering, there are <strong>653530 rows</strong> and <strong>38 columns</strong> in the filtered data.</p>
+
+<h3>Results</h3>
+
+<h4>Economic Effects</h4>
+
+<h4>Public Health Effects</h4>
+
+</body>
+
+</html>
