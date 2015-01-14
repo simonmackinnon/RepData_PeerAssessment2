@@ -1,6 +1,6 @@
 Reproducible Research: Peer Assessment 2
 ==========================================
-Created by Simon Mackinnon on January 14, 2015
+Created by Simon Mackinnon on January 15, 2015
 [Reproducable Research - Coursera](https://www.coursera.org/course/repdata)
 
 ## Economic and Public Health Effects of Storms and Other Severe Weather Events 
@@ -19,26 +19,6 @@ options(scipen = 999)
 library(R.utils)
 library(lubridate)
 library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following objects are masked from 'package:lubridate':
-## 
-##     intersect, setdiff, union
-## 
-## The following object is masked from 'package:stats':
-## 
-##     filter
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(ggplot2)
 library(grid)
 library(gridExtra)
@@ -79,7 +59,7 @@ print (paste("Extracted data file information.", "Created on:", format(file.info
 ```
 
 ```
-## [1] "Extracted data file information. Created on: January 13, 2015 17:17:01 Modified on:  January 13, 2015 17:17:19"
+## [1] "Extracted data file information. Created on: January 13, 2015 15:31:37 Modified on:  January 13, 2015 15:31:49"
 ```
 
 We now read the .csv into R.
@@ -199,6 +179,388 @@ dim(stormData)
 After filtering, there are **653530 rows** and **38 columns** in the filtered data.
 
 ### Results
+
+#### Event Type Analysis
+
+In order to perform an anlysis on the health and economic effects of different severe weather event types, we should first illustrate a proper understanding of the different types of events.
+
+
+```r
+eventTypeList <- unique(stormData$EVTYPE)
+eventTypeList
+```
+
+```
+##   [1] "WINTER STORM"                   "TORNADO"                       
+##   [3] "TSTM WIND"                      "HAIL"                          
+##   [5] "HIGH WIND"                      "HEAVY RAIN"                    
+##   [7] "FLASH FLOOD"                    "FREEZING RAIN"                 
+##   [9] "EXTREME COLD"                   "EXCESSIVE HEAT"                
+##  [11] "LIGHTNING"                      "FUNNEL CLOUD"                  
+##  [13] "EXTREME WINDCHILL"              "BLIZZARD"                      
+##  [15] "URBAN/SML STREAM FLD"           "FLOOD"                         
+##  [17] "TSTM WIND/HAIL"                 "WATERSPOUT"                    
+##  [19] "RIP CURRENTS"                   "HEAVY SNOW"                    
+##  [21] "Other"                          "Record dry month"              
+##  [23] "Temperature record"             "WILD/FOREST FIRE"              
+##  [25] "Minor Flooding"                 "ICE STORM"                     
+##  [27] "STORM SURGE"                    "Ice jam flood (minor"          
+##  [29] "High Wind"                      "DUST STORM"                    
+##  [31] "STRONG WIND"                    "DUST DEVIL"                    
+##  [33] "Tstm Wind"                      "DROUGHT"                       
+##  [35] "DRY MICROBURST"                 "FOG"                           
+##  [37] "ROUGH SURF"                     "Wind"                          
+##  [39] "THUNDERSTORMS"                  "Heavy Surf"                    
+##  [41] "HEAVY SURF"                     "Dust Devil"                    
+##  [43] "Wind Damage"                    "Marine Accident"               
+##  [45] "Snow"                           "AVALANCHE"                     
+##  [47] "Freeze"                         "TROPICAL STORM"                
+##  [49] "Snow Squalls"                   "Coastal Flooding"              
+##  [51] "Heavy Rain"                     "Strong Wind"                   
+##  [53] "WINDS"                          "WIND"                          
+##  [55] "COASTAL FLOOD"                  "COASTAL STORM"                 
+##  [57] "COASTALFLOOD"                   "Erosion/Cstl Flood"            
+##  [59] "Heavy Rain and Wind"            "Light Snow/Flurries"           
+##  [61] "Wet Month"                      "Wet Year"                      
+##  [63] "Tidal Flooding"                 "River Flooding"                
+##  [65] "SNOW"                           "DAMAGING FREEZE"               
+##  [67] "Damaging Freeze"                "HURRICANE"                     
+##  [69] "Beach Erosion"                  "Hot and Dry"                   
+##  [71] "Flood/Flash Flood"              "Icy Roads"                     
+##  [73] "High Surf"                      "Heavy Rain/High Surf"          
+##  [75] "HIGH SURF"                      "Thunderstorm Wind"             
+##  [77] "Rain Damage"                    "ICE JAM"                       
+##  [79] "Unseasonable Cold"              "Early Frost"                   
+##  [81] "Wintry Mix"                     "blowing snow"                  
+##  [83] "STREET FLOODING"                "Record Cold"                   
+##  [85] "Extreme Cold"                   "Ice Fog"                       
+##  [87] "Excessive Cold"                 "Torrential Rainfall"           
+##  [89] "Freezing Rain"                  "Landslump"                     
+##  [91] "Late-season Snowfall"           "Hurricane Edouard"             
+##  [93] "Coastal Storm"                  "Flood"                         
+##  [95] "HEAVY RAIN/WIND"                "TIDAL FLOODING"                
+##  [97] "Winter Weather"                 "Snow squalls"                  
+##  [99] "Strong Winds"                   "Strong winds"                  
+## [101] "RECORD WARM TEMPS."             "Ice/Snow"                      
+## [103] "Mudslide"                       "Glaze"                         
+## [105] "Extended Cold"                  "Snow Accumulation"             
+## [107] "Freezing Fog"                   "Drifting Snow"                 
+## [109] "Whirlwind"                      "Heavy snow shower"             
+## [111] "Heavy rain"                     "COASTAL FLOODING"              
+## [113] "LATE SNOW"                      "Record May Snow"               
+## [115] "Record Winter Snow"             "Heavy Precipitation"           
+## [117] " COASTAL FLOOD"                 "Record temperature"            
+## [119] "Light snow"                     "Late Season Snowfall"          
+## [121] "Gusty Wind"                     "small hail"                    
+## [123] "Light Snow"                     "MIXED PRECIP"                  
+## [125] "Black Ice"                      "Mudslides"                     
+## [127] "Gradient wind"                  "Snow and Ice"                  
+## [129] "COLD"                           "Freezing Spray"                
+## [131] "DOWNBURST"                      "Summary Jan 17"                
+## [133] "Summary of March 14"            "Summary of March 23"           
+## [135] "Summary of March 24"            "Summary of April 3rd"          
+## [137] "Summary of April 12"            "Summary of April 13"           
+## [139] "Summary of April 21"            "Summary August 11"             
+## [141] "Summary of April 27"            "Summary of May 9-10"           
+## [143] "Summary of May 10"              "Summary of May 13"             
+## [145] "Summary of May 14"              "Summary of May 22 am"          
+## [147] "Summary of May 22 pm"           "Heatburst"                     
+## [149] "Summary of May 26 am"           "Summary of May 26 pm"          
+## [151] "Metro Storm, May 26"            "Summary of May 31 am"          
+## [153] "Summary of May 31 pm"           "Summary of June 3"             
+## [155] "Summary of June 4"              "Summary June 5-6"              
+## [157] "Summary June 6"                 "Summary of June 11"            
+## [159] "Summary of June 12"             "Summary of June 13"            
+## [161] "Summary of June 15"             "Summary of June 16"            
+## [163] "Summary June 18-19"             "Summary of June 23"            
+## [165] "Summary of June 24"             "Summary of June 30"            
+## [167] "Summary of July 2"              "Summary of July 3"             
+## [169] "Summary of July 11"             "Summary of July 22"            
+## [171] "Summary July 23-24"             "Summary of July 26"            
+## [173] "Summary of July 29"             "Summary of August 1"           
+## [175] "Summary August 2-3"             "Summary August 7"              
+## [177] "Summary August 9"               "Summary August 10"             
+## [179] "Summary August 17"              "Summary August 21"             
+## [181] "Summary August 28"              "Summary September 4"           
+## [183] "Summary September 20"           "Summary September 23"          
+## [185] "Summary Sept. 25-26"            "Summary: Oct. 20-21"           
+## [187] "Summary: October 31"            "Summary: Nov. 6-7"             
+## [189] "Summary: Nov. 16"               "Microburst"                    
+## [191] "wet micoburst"                  "HAIL/WIND"                     
+## [193] "Hail(0.75)"                     "Funnel Cloud"                  
+## [195] "Urban Flooding"                 "No Severe Weather"             
+## [197] "Urban flood"                    "Urban Flood"                   
+## [199] "Cold"                           "WINTER WEATHER"                
+## [201] "Summary of May 22"              "Summary of June 6"             
+## [203] "Summary August 4"               "Summary of June 10"            
+## [205] "Summary of June 18"             "Summary September 3"           
+## [207] "Summary: Sept. 18"              "Coastal Flood"                 
+## [209] "coastal flooding"               "Small Hail"                    
+## [211] "Record Temperatures"            "Light Snowfall"                
+## [213] "Freezing Drizzle"               "Gusty wind/rain"               
+## [215] "GUSTY WIND/HVY RAIN"            "Blowing Snow"                  
+## [217] "Early snowfall"                 "Monthly Snowfall"              
+## [219] "Record Heat"                    "Seasonal Snowfall"             
+## [221] "Monthly Rainfall"               "Cold Temperature"              
+## [223] "Sml Stream Fld"                 "Heat Wave"                     
+## [225] "MUDSLIDE/LANDSLIDE"             "Saharan Dust"                  
+## [227] "Volcanic Ash"                   "Volcanic Ash Plume"            
+## [229] "Thundersnow shower"             "NONE"                          
+## [231] "COLD AND SNOW"                  "DAM BREAK"                     
+## [233] "RAIN"                           "RAIN/SNOW"                     
+## [235] "OTHER"                          "FREEZE"                        
+## [237] "TSTM WIND (G45)"                "RECORD WARMTH"                 
+## [239] "STRONG WINDS"                   "FREEZING DRIZZLE"              
+## [241] "UNSEASONABLY WARM"              "SLEET/FREEZING RAIN"           
+## [243] "BLACK ICE"                      "WINTRY MIX"                    
+## [245] "BLOW-OUT TIDES"                 "UNSEASONABLY COLD"             
+## [247] "UNSEASONABLY COOL"              "TSTM HEAVY RAIN"               
+## [249] "UNSEASONABLY DRY"               "Gusty Winds"                   
+## [251] "GUSTY WIND"                     "TSTM WIND 40"                  
+## [253] "TSTM WIND 45"                   "HARD FREEZE"                   
+## [255] "TSTM WIND (41)"                 "HEAT"                          
+## [257] "RIVER FLOOD"                    "TSTM WIND (G40)"               
+## [259] "RIP CURRENT"                    "TSTM WND"                      
+## [261] "DENSE FOG"                      "Wintry mix"                    
+## [263] " TSTM WIND"                     "MUD SLIDE"                     
+## [265] "MUDSLIDES"                      "MUDSLIDE"                      
+## [267] "Frost"                          "Frost/Freeze"                  
+## [269] "SNOW AND ICE"                   "WIND DAMAGE"                   
+## [271] "RAIN (HEAVY)"                   "Record Warmth"                 
+## [273] "Prolong Cold"                   "Cold and Frost"                
+## [275] "RECORD COLD"                    "PROLONG COLD"                  
+## [277] "AGRICULTURAL FREEZE"            "URBAN/SML STREAM FLDG"         
+## [279] "SNOW SQUALL"                    "HEAVY SNOW SQUALLS"            
+## [281] "SNOW/ICE"                       "GUSTY WINDS"                   
+## [283] "SMALL HAIL"                     "SNOW SQUALLS"                  
+## [285] "LAKE EFFECT SNOW"               "STRONG WIND GUST"              
+## [287] "LATE FREEZE"                    "RECORD TEMPERATURES"           
+## [289] "ICY ROADS"                      "RECORD SNOWFALL"               
+## [291] "BLOW-OUT TIDE"                  "THUNDERSTORM"                  
+## [293] "Hypothermia/Exposure"           "HYPOTHERMIA/EXPOSURE"          
+## [295] "Lake Effect Snow"               "Mixed Precipitation"           
+## [297] "Record High"                    "COASTALSTORM"                  
+## [299] "LIGHT SNOW"                     "Snow and sleet"                
+## [301] "Freezing rain"                  "Gusty winds"                   
+## [303] "FUNNEL CLOUDS"                  "WATERSPOUTS"                   
+## [305] "Blizzard Summary"               "FROST"                         
+## [307] "ICE"                            "SUMMARY OF MARCH 24-25"        
+## [309] "SUMMARY OF MARCH 27"            "SUMMARY OF MARCH 29"           
+## [311] "GRADIENT WIND"                  "Icestorm/Blizzard"             
+## [313] "Flood/Strong Wind"              "TSTM WIND AND LIGHTNING"       
+## [315] "gradient wind"                  "SEVERE THUNDERSTORMS"          
+## [317] "EXCESSIVE RAIN"                 "Freezing drizzle"              
+## [319] "Mountain Snows"                 "URBAN/SMALL STRM FLDG"         
+## [321] "WET MICROBURST"                 "Heavy surf and wind"           
+## [323] "Mild and Dry Pattern"           "COLD AND FROST"                
+## [325] "RECORD HEAT"                    "TYPHOON"                       
+## [327] "LANDSLIDES"                     "HIGH SWELLS"                   
+## [329] "HIGH  SWELLS"                   "VOLCANIC ASH"                  
+## [331] "HIGH WINDS"                     "DRY SPELL"                     
+## [333] " LIGHTNING"                     "BEACH EROSION"                 
+## [335] "UNSEASONAL RAIN"                "EARLY RAIN"                    
+## [337] "PROLONGED RAIN"                 "WINTERY MIX"                   
+## [339] "COASTAL FLOODING/EROSION"       "UNSEASONABLY WET"              
+## [341] "HOT SPELL"                      "HEAT WAVE"                     
+## [343] "UNSEASONABLY HOT"               "UNSEASONABLY WARM AND DRY"     
+## [345] " TSTM WIND (G45)"               "TSTM WIND  (G45)"              
+## [347] "HIGH WIND (G40)"                "TSTM WIND (G35)"               
+## [349] "DRY WEATHER"                    "TSTM WINDS"                    
+## [351] "FREEZING RAIN/SLEET"            "ABNORMAL WARMTH"               
+## [353] "UNUSUAL WARMTH"                 "GLAZE"                         
+## [355] "WAKE LOW WIND"                  "MONTHLY RAINFALL"              
+## [357] "COLD TEMPERATURES"              "COLD WIND CHILL TEMPERATURES"  
+## [359] "MODERATE SNOW"                  "MODERATE SNOWFALL"             
+## [361] "URBAN/STREET FLOODING"          "COASTAL EROSION"               
+## [363] "UNUSUAL/RECORD WARMTH"          "BITTER WIND CHILL"             
+## [365] "BITTER WIND CHILL TEMPERATURES" "SEICHE"                        
+## [367] "TSTM"                           "COASTAL  FLOODING/EROSION"     
+## [369] "SNOW DROUGHT"                   "UNSEASONABLY WARM YEAR"        
+## [371] "HYPERTHERMIA/EXPOSURE"          "SNOW/SLEET"                    
+## [373] "ROCK SLIDE"                     "ICE PELLETS"                   
+## [375] "URBAN FLOOD"                    "PATCHY DENSE FOG"              
+## [377] "RECORD COOL"                    "RECORD WARM"                   
+## [379] "HOT WEATHER"                    "RIVER FLOODING"                
+## [381] "RECORD TEMPERATURE"             "SAHARAN DUST"                  
+## [383] "TROPICAL DEPRESSION"            "VOLCANIC ERUPTION"             
+## [385] "COOL SPELL"                     "WIND ADVISORY"                 
+## [387] "GUSTY WIND/HAIL"                "RED FLAG FIRE WX"              
+## [389] "FIRST FROST"                    "EXCESSIVELY DRY"               
+## [391] "HEAVY SEAS"                     "FLASH FLOOD/FLOOD"             
+## [393] "SNOW AND SLEET"                 "LIGHT SNOW/FREEZING PRECIP"    
+## [395] "VOG"                            "EXCESSIVE RAINFALL"            
+## [397] "FLASH FLOODING"                 "MONTHLY PRECIPITATION"         
+## [399] "MONTHLY TEMPERATURE"            "RECORD DRYNESS"                
+## [401] "EXTREME WINDCHILL TEMPERATURES" "MIXED PRECIPITATION"           
+## [403] "EXTREME WIND CHILL"             "DRY CONDITIONS"                
+## [405] "HEAVY RAINFALL"                 "REMNANTS OF FLOYD"             
+## [407] "EARLY SNOWFALL"                 "FREEZING FOG"                  
+## [409] "LANDSPOUT"                      "DRIEST MONTH"                  
+## [411] "RECORD  COLD"                   "LATE SEASON HAIL"              
+## [413] "EXCESSIVE SNOW"                 "WINTER MIX"                    
+## [415] "DRYNESS"                        "FLOOD/FLASH/FLOOD"             
+## [417] "WIND AND WAVE"                  "SEVERE THUNDERSTORM"           
+## [419] "LIGHT FREEZING RAIN"            " WIND"                         
+## [421] "MONTHLY SNOWFALL"               "DRY"                           
+## [423] "RECORD RAINFALL"                "RECORD PRECIPITATION"          
+## [425] "ICE ROADS"                      "HIGH SEAS"                     
+## [427] "SLEET"                          "ROUGH SEAS"                    
+## [429] "UNSEASONABLY WARM/WET"          "UNSEASONABLY COOL & WET"       
+## [431] "UNUSUALLY WARM"                 "TSTM WIND G45"                 
+## [433] "NON SEVERE HAIL"                "RECORD SNOW"                   
+## [435] "SNOW/FREEZING RAIN"             "SNOW/BLOWING SNOW"             
+## [437] "NON-SEVERE WIND DAMAGE"         "UNUSUALLY COLD"                
+## [439] "WARM WEATHER"                   "LANDSLUMP"                     
+## [441] "THUNDERSTORM WIND (G40)"        "LANDSLIDE"                     
+## [443] "WALL CLOUD"                     "HIGH WATER"                    
+## [445] "UNSEASONABLY WARM & WET"        " FLASH FLOOD"                  
+## [447] "LOCALLY HEAVY RAIN"             "WIND GUSTS"                    
+## [449] "UNSEASONAL LOW TEMP"            "HIGH SURF ADVISORY"            
+## [451] "LATE SEASON SNOW"               "GUSTY LAKE WIND"               
+## [453] "ABNORMALLY DRY"                 "WINTER WEATHER MIX"            
+## [455] "RED FLAG CRITERIA"              "WND"                           
+## [457] "CSTL FLOODING/EROSION"          "SMOKE"                         
+## [459] " WATERSPOUT"                    "SNOW ADVISORY"                 
+## [461] "EXTREMELY WET"                  "UNUSUALLY LATE SNOW"           
+## [463] "VERY DRY"                       "RECORD LOW RAINFALL"           
+## [465] "ROGUE WAVE"                     "SNOWMELT FLOODING"             
+## [467] "PROLONG WARMTH"                 "ACCUMULATED SNOWFALL"          
+## [469] "FALLING SNOW/ICE"               "DUST DEVEL"                    
+## [471] "NON-TSTM WIND"                  "NON TSTM WIND"                 
+## [473] "BRUSH FIRE"                     "GUSTY THUNDERSTORM WINDS"      
+## [475] "PATCHY ICE"                     "SNOW SHOWERS"                  
+## [477] "HEAVY RAIN EFFECTS"             "BLOWING DUST"                  
+## [479] "EXCESSIVE HEAT/DROUGHT"         "NORTHERN LIGHTS"               
+## [481] "MARINE TSTM WIND"               "   HIGH SURF ADVISORY"         
+## [483] "WIND CHILL"                     "HAZARDOUS SURF"                
+## [485] "WILDFIRE"                       "FROST/FREEZE"                  
+## [487] "WINTER WEATHER/MIX"             "ASTRONOMICAL HIGH TIDE"        
+## [489] "COLD WEATHER"                   "WHIRLWIND"                     
+## [491] "VERY WARM"                      "ABNORMALLY WET"                
+## [493] "TORNADO DEBRIS"                 "EXTREME COLD/WIND CHILL"       
+## [495] "ICE ON ROAD"                    "FIRST SNOW"                    
+## [497] "ICE/SNOW"                       "DROWNING"                      
+## [499] "GUSTY THUNDERSTORM WIND"        "MARINE HAIL"                   
+## [501] "HIGH SURF ADVISORIES"           "HURRICANE/TYPHOON"             
+## [503] "HEAVY SURF/HIGH SURF"           "SLEET STORM"                   
+## [505] "STORM SURGE/TIDE"               "COLD/WIND CHILL"               
+## [507] "LAKE-EFFECT SNOW"               "MARINE HIGH WIND"              
+## [509] "THUNDERSTORM WIND"              "TSUNAMI"                       
+## [511] "DENSE SMOKE"                    "LAKESHORE FLOOD"               
+## [513] "MARINE THUNDERSTORM WIND"       "MARINE STRONG WIND"            
+## [515] "ASTRONOMICAL LOW TIDE"          "VOLCANIC ASHFALL"
+```
+
+From this, we can see there are **516** different defined event types. However, we can observe some problems with the way that the event types are recorded.  
+In particular, we can see several types of severe weather that is defined by multiple EVTYPE values, e.g. Flood:
+
+
+
+
+```r
+floodList <- eventTypeList[grepl("flood", eventTypeList, ignore.case = TRUE)]
+floodList
+```
+
+```
+##  [1] "FLASH FLOOD"               "FLOOD"                    
+##  [3] "Minor Flooding"            "Ice jam flood (minor"     
+##  [5] "Coastal Flooding"          "COASTAL FLOOD"            
+##  [7] "COASTALFLOOD"              "Erosion/Cstl Flood"       
+##  [9] "Tidal Flooding"            "River Flooding"           
+## [11] "Flood/Flash Flood"         "STREET FLOODING"          
+## [13] "Flood"                     "TIDAL FLOODING"           
+## [15] "COASTAL FLOODING"          " COASTAL FLOOD"           
+## [17] "Urban Flooding"            "Urban flood"              
+## [19] "Urban Flood"               "Coastal Flood"            
+## [21] "coastal flooding"          "RIVER FLOOD"              
+## [23] "Flood/Strong Wind"         "COASTAL FLOODING/EROSION" 
+## [25] "URBAN/STREET FLOODING"     "COASTAL  FLOODING/EROSION"
+## [27] "URBAN FLOOD"               "RIVER FLOODING"           
+## [29] "FLASH FLOOD/FLOOD"         "FLASH FLOODING"           
+## [31] "FLOOD/FLASH/FLOOD"         " FLASH FLOOD"             
+## [33] "CSTL FLOODING/EROSION"     "SNOWMELT FLOODING"        
+## [35] "LAKESHORE FLOOD"
+```
+
+From this, we can see there are **35** different event types that could be defined more broadly as 'flooding'. Other examples of this are tornadoes, cold, hot, dry, snow, fire, and others.  
+
+Another problem with EVTYPE data is that there are many observations with "Summary of Month Date" recorded, instead of a definition of the event type.
+
+
+```r
+evtypeSummaryOfMonthDateList <- eventTypeList[grepl("summary of", eventTypeList, ignore.case = TRUE)]
+evtypeSummaryOfMonthDateList
+```
+
+```
+##  [1] "Summary of March 14"    "Summary of March 23"   
+##  [3] "Summary of March 24"    "Summary of April 3rd"  
+##  [5] "Summary of April 12"    "Summary of April 13"   
+##  [7] "Summary of April 21"    "Summary of April 27"   
+##  [9] "Summary of May 9-10"    "Summary of May 10"     
+## [11] "Summary of May 13"      "Summary of May 14"     
+## [13] "Summary of May 22 am"   "Summary of May 22 pm"  
+## [15] "Summary of May 26 am"   "Summary of May 26 pm"  
+## [17] "Summary of May 31 am"   "Summary of May 31 pm"  
+## [19] "Summary of June 3"      "Summary of June 4"     
+## [21] "Summary of June 11"     "Summary of June 12"    
+## [23] "Summary of June 13"     "Summary of June 15"    
+## [25] "Summary of June 16"     "Summary of June 23"    
+## [27] "Summary of June 24"     "Summary of June 30"    
+## [29] "Summary of July 2"      "Summary of July 3"     
+## [31] "Summary of July 11"     "Summary of July 22"    
+## [33] "Summary of July 26"     "Summary of July 29"    
+## [35] "Summary of August 1"    "Summary of May 22"     
+## [37] "Summary of June 6"      "Summary of June 10"    
+## [39] "Summary of June 18"     "SUMMARY OF MARCH 24-25"
+## [41] "SUMMARY OF MARCH 27"    "SUMMARY OF MARCH 29"
+```
+
+From this, we can see there are **42** observations where the event type was recorded as such. Exploring a little further, we can see how the observation was recorded in full.
+
+
+```r
+stormDataSummaryOfMonthDate <- stormData[grepl("summary of", stormData$EVTYPE, ignore.case = TRUE),]
+head(stormDataSummaryOfMonthDate, n=2)
+```
+
+```
+##        STATE__          BGN_DATE    BGN_TIME TIME_ZONE COUNTY
+## 269586      40 3/14/1996 0:00:00 11:15:00 AM       CST     12
+## 269610      40 3/23/1996 0:00:00 04:15:00 PM       CST     11
+##                        COUNTYNAME STATE              EVTYPE BGN_RANGE
+## 269586       OKZ012>013 - 018>020    OK Summary of March 14         0
+## 269610 OKZ011>012 - 014>018 - 036    OK Summary of March 23         0
+##        BGN_AZI BGN_LOCATI          END_DATE    END_TIME COUNTY_END
+## 269586                 CN 3/14/1996 0:00:00 05:00:00 PM          0
+## 269610                    3/23/1996 0:00:00 08:30:00 PM          0
+##        COUNTYENDN END_RANGE END_AZI END_LOCATI LENGTH WIDTH  F MAG
+## 269586         NA         0                 CN      0     0 NA   0
+## 269610         NA         0                         0     0 NA   0
+##        FATALITIES INJURIES PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP WFO
+## 269586          0        0       0                  0            OUN
+## 269610          0        0       0                  0            OUN
+##                                      STATEOFFIC
+## 269586 OKLAHOMA, Western, Central and Southeast
+## 269610 OKLAHOMA, Western, Central and Southeast
+##                                                                                      ZONENAMES
+## 269586                                GARFIELD - GARFIELD - NOBLE - KINGFISHER - LOGAN - PAYNE
+## 269610 MAJOR - MAJOR - GARFIELD - ROGER MILLS - DEWEY - CUSTER - BLAINE - KINGFISHER - JACKSON
+##        LATITUDE LONGITUDE LATITUDE_E LONGITUDE_
+## 269586        0         0          0          0
+## 269610        0         0          0          0
+##                                                                                                                                                                                                                                                       REMARKS
+## 269586 Severe thunderstorms produced large hail as they moved across north-central Oklahoma during the late afternoon of the 14th. The largest hail was reported 1.5 miles north of Cushing in Payne County, where hail as large as half-dollars was sighted.
+## 269610                                                                                      Severe thunderstorms moved across western Oklahoma, producing large hail.  Hail as large as baseballs was reported in Arapaho in Custer County with these storms.
+##        REFNUM year
+## 269586 269519 1996
+## 269610 269610 1996
+```
+
+Upon this closer analysis, we can see that such instances have had the event type incorrectly recorded. The REMARKS column of the storm data contains a description of the event, which if needed, could be used to correctly populate the event type for such observations.
+
+However, for the purposes of simple analysis, we will consider the EVTYPE values to be correct
 
 #### Economic Effects
 
@@ -509,5 +871,6 @@ grid.arrange(p3, p4, ncol = 2, main = "Health Effects of Severe Weather Events")
 
 ### Conclusion
 
-Based on the above results, we can conclude that **tornado** is the severe weather most harmful with respect to population health, and that **flood** and **drought** have the greatest economic consequences.
+Based on the above results, we can conclude that **tornado** is the severe weather most harmful with respect to population health, and that **flood** and **drought** have the greatest economic consequences.  
 
+A future proposed improvement to this analysis, would be to rectify the issues described in the section **Event Type Analysis**, i.e. aggregate the data based on similar event types and clean up incorrectly recorded event types by getting the event type from the REMARKS column of such observations. 

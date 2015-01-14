@@ -122,10 +122,58 @@ stormData$year <- year
 stormData <- stormData[stormData$year >= 1996,]
 #display the dimensions of the filtered data
 dim(stormData)
+
 ```
 After filtering, there are **`r nrow(stormData)` rows** and **`r ncol(stormData)` columns** in the filtered data.
 
 ### Results
+
+#### Event Type Analysis
+
+In order to perform an anlysis on the health and economic effects of different severe weather event types, we should first illustrate a proper understanding of the different types of events.
+
+```{r EventTypeAnalysis1, echo=TRUE}
+
+eventTypeList <- unique(stormData$EVTYPE)
+eventTypeList
+
+```
+
+From this, we can see there are **`r length(eventTypeList)`** different defined event types. However, we can observe some problems with the way that the event types are recorded.  
+In particular, we can see several types of severe weather that is defined by multiple EVTYPE values, e.g. Flood:
+
+
+
+```{r EventTypeAnalysis2, echo=TRUE}
+
+floodList <- eventTypeList[grepl("flood", eventTypeList, ignore.case = TRUE)]
+floodList
+
+```
+
+From this, we can see there are **`r length(floodList)`** different event types that could be defined more broadly as 'flooding'. Other examples of this are tornadoes, cold, hot, dry, snow, fire, and others.  
+
+Another problem with EVTYPE data is that there are many observations with "Summary of Month Date" recorded, instead of a definition of the event type.
+
+```{r EventTypeAnalysis3, echo=TRUE}
+
+evtypeSummaryOfMonthDateList <- eventTypeList[grepl("summary of", eventTypeList, ignore.case = TRUE)]
+evtypeSummaryOfMonthDateList
+
+```
+
+From this, we can see there are **`r length(evtypeSummaryOfMonthDateList)`** observations where the event type was recorded as such. Exploring a little further, we can see how the observation was recorded in full.
+
+```{r EventTypeAnalysis4, echo=TRUE}
+
+head(stormData[grepl("summary of", stormData$EVTYPE, ignore.case = TRUE),], 
+           n=5)
+
+```
+
+Upon this closer analysis, we can see that such instances have had the event type incorrectly recorded. The REMARKS column of the storm data contains a description of the event, which if needed, could be used to correctly populate the event type for such observations.
+
+However, for the purposes of simple analysis, we will consider the EVTYPE values to be correct
 
 #### Economic Effects
 
@@ -337,5 +385,6 @@ grid.arrange(p3, p4, ncol = 2, main = "Health Effects of Severe Weather Events")
 
 ### Conclusion
 
-Based on the above results, we can conclude that **tornado** is the severe weather most harmful with respect to population health, and that **flood** and **drought** have the greatest economic consequences.
+Based on the above results, we can conclude that **tornado** is the severe weather most harmful with respect to population health, and that **flood** and **drought** have the greatest economic consequences.  
 
+A future proposed improvement to this analysis, would be to rectify the issues described in the section **Event Type Analysis**, i.e. aggregate the data based on similar event types and clean up incorrectly recorded event types by getting the event type from the REMARKS column of such observations. 
