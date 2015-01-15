@@ -1,11 +1,15 @@
 Reproducible Research: Peer Assessment 2
 ==========================================
-Created by Simon Mackinnon on January 13, 2015
+Created by Simon Mackinnon on January 14, 2015
 [Reproducable Research - Coursera](https://www.coursera.org/course/repdata)
 
 ## Economic and Public Health Effects of Storms and Other Severe Weather Events 
 
 ### Synopsis
+
+The aim of this report is to analyse the storm database collected via the U.S. National Oceanic and Atmospheric Administration's (NOAA) from 1950 - 2011, and conclude the economic and health effects of different severe weather event types.  
+The recorded data lists the number of fatalities, injuries, property and crop damage. These will be used to decide which types of event are most harmful to the population health and economy.  
+In analysing the data, it was found that **tornadoes have the greatest detrimental effect on population health** and that **flood and drought have the greatest detremental economic effect**.  
 
 
 ### Settings
@@ -13,46 +17,17 @@ Created by Simon Mackinnon on January 13, 2015
 ```r
 options(scipen = 999) 
 library(R.utils)
-```
-
-```
-## Loading required package: R.oo
-## Loading required package: R.methodsS3
-## R.methodsS3 v1.6.1 (2014-01-04) successfully loaded. See ?R.methodsS3 for help.
-## R.oo v1.18.0 (2014-02-22) successfully loaded. See ?R.oo for help.
-## 
-## Attaching package: 'R.oo'
-## 
-## The following objects are masked from 'package:methods':
-## 
-##     getClasses, getMethods
-## 
-## The following objects are masked from 'package:base':
-## 
-##     attach, detach, gc, load, save
-## 
-## R.utils v1.34.0 (2014-10-07) successfully loaded. See ?R.utils for help.
-## 
-## Attaching package: 'R.utils'
-## 
-## The following object is masked from 'package:utils':
-## 
-##     timestamp
-## 
-## The following objects are masked from 'package:base':
-## 
-##     cat, commandArgs, getOption, inherits, isOpen, parse, warnings
-```
-
-```r
 library(lubridate)
+library(dplyr)
 library(ggplot2)
+library(grid)
+library(gridExtra)
+library(lazyeval)
 ```
 
 ### Data Processing
 The data to be used for this analysis is available for download via the course website at [Storm Data](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2).    
 
-If the .csv file isn't already extracted, and the zip file doesn't exist, then we should download and then extract it.
 
 ```r
 zip_filename <- "./data/repdata-data-StormData.csv.bz2"
@@ -79,11 +54,47 @@ if (!file.exists(data_filename))
   
   bunzip2(zip_filename, overwrite=T, remove=F)
 }
+
+print ("Extracted data file information:")
 ```
 
+```
+## [1] "Extracted data file information:"
+```
 
+```r
+print ("***************************************************************")
+```
 
-Once we have the .csv file, we need to read it into R.
+```
+## [1] "***************************************************************"
+```
+
+```r
+print (paste("Created on:", format(file.info(data_filename)$ctime, "%B %d, %Y %H:%M:%S")))
+```
+
+```
+## [1] "Created on: January 13, 2015 17:17:01"
+```
+
+```r
+print (paste("Modified on: ", format(file.info(data_filename)$mtime, "%B %d, %Y %H:%M:%S")))
+```
+
+```
+## [1] "Modified on:  January 13, 2015 17:17:19"
+```
+
+```r
+print ("***************************************************************")
+```
+
+```
+## [1] "***************************************************************"
+```
+
+We now read the .csv into R.
 
 
 ```r
@@ -148,7 +159,7 @@ There are **902297 rows** and **37 columns** in the read data.
 
 ### Data Selection and Filtering
 
-Looking at the details of how the data was collected at the [Storm Events Database](http://www.ncdc.noaa.gov/stormevents/details.jsp), we can see that only observations from 1996 onwards includes data from *All Event Types (48 from Directive 10-1605)*, (as defined in [NWS Directive 10-1605](http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf)).  
+Looking at the details of how the data was collected at the [Storm Events Database](http://www.ncdc.noaa.gov/stormevents/details.jsp), we can see that only observations from 1996 onward includes data from *All Event Types (48 from Directive 10-1605)*, (as defined in [NWS Directive 10-1605](http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf)).  
 
 We can verify that most of the observations were recorded after this date as well, by observing the frequency of observations per year in the **stormData$BGN_DATE** variable
 
@@ -157,43 +168,35 @@ We can verify that most of the observations were recorded after this date as wel
 year <- year(as.Date(stormData$BGN_DATE, format = "%m/%d/%Y"))
 
 #break up the year data into 3 types
-
 yearType <- sapply(as.numeric(year), function(x) 
     if (x >= 1950 & x <= 1955){1} 
     else if (x <= 1996) {2} 
     else if (x <= 2011) {3}
     else {0})
 
-#bind into a marix, then coerce to a data fram
+#bind into a marix, then coerce to a data frame
 yearData <- data.frame(cbind(year, yearType))
 
-# hist(yearData$year, 
-#      breaks = as.numeric(max(yearData$year))-as.numeric(min(yearData$year)),
-#      )
-
 #create the histogram
-m <- ggplot(yearData, aes(x=year)) + 
-  geom_histogram(binwidth = 1, aes(fill = factor(yearData$yearType))) +
-  scale_fill_discrete(  name="Year Type",                        
-                        labels= c("1. Tornado\n1950-1955\n", 
-                                  "2. Tornado,\nThunderstorm Wind\nand Hail\n1956-1995\n", 
-                                  "3. All Event\nTypes (48 from\nDirective 10-1605)\n1996-2011")) +
-    labs(title = "Histogram of Number of\nObservarions Recorded Per Year (1950 - 2011)", 
-         x = "Year", 
-         y = "Number of Observations Recorded")
-
-#and output
-m
+ggplot(yearData, aes(x=year)) + 
+geom_histogram(binwidth = 1, 
+               aes(fill = factor(yearData$yearType)),
+               colour = "black") +
+scale_fill_discrete(name="Year Type", 
+                    labels= c("1. Tornado\n1950-1955\n",
+                              "2. Tornado,\nThunderstorm Wind\nand Hail\n1956-1995\n",
+                              "3. All Event\nTypes (48 from\nDirective 10-1605)\n1996-2011")) +
+labs(title = "Histogram of Number of\nObservarions Recorded Per Year (1950 - 2011)",
+     x = "Year",
+     y = "Number of Observations Recorded")
 ```
 
 <img src="figure/observationFrequencyPerYear-1.png" title="plot of chunk observationFrequencyPerYear" alt="plot of chunk observationFrequencyPerYear" style="display: block; margin: auto;" />
 
-Based on this, we filter the data to only use observations from 1996 onwards.
+Based on this, we filter the data to only use observations from 1996 onward.
 
 
 ```r
-#copy of the originally read data
-stormDataOrig <- stormData
 #append the year values for filtering
 stormData$year <- year
 #subset the data for all values of year greater or equal to 1996
@@ -211,23 +214,312 @@ After filtering, there are **653530 rows** and **38 columns** in the filtered da
 
 #### Economic Effects
 
+For the economic effects of severe weather, we must isolate what parts of the data define this.
 
+Using the code book, ([Storm Events](http://ire.org/nicar/database-library/databases/storm-events/)), we can see that the columns PROPDMG and CROPDMG indicate the value of damage to property and crops respectively. Each of those columns is followed by a corresponding *EXP column, which indicates an exponent (H-Hundreds, K-Thousands, M-Millions, B-Billions). 
+
+In order to aggregate the property and crop damage costs per event type, a common unit will need to be used (in this case, whole dollars.) In order to do this, two additional columns *propertyDamage* and *cropDamage* will be introduced, which will be the *DMG value multiplied by the appropriate *DMGEXP value.
+
+From the following analysis, we can determine that **Flood** is the severe weather event type that has the greatest effect on the cost of Property Damage and that **Drought** has the greatest effect on the cost of Crop Damage.
 
 
 ```r
 #subset data for crop damage cost, property damage cost (with exponents) and ev-type
-#summation aggregrate by ev-type
-#plot 
+
+stormDataEcon <- stormData[,c("EVTYPE", 
+                              "PROPDMG", 
+                              "PROPDMGEXP", 
+                              "CROPDMG", 
+                              "CROPDMGEXP")]
+
+#create new vectors in the data frame
+stormDataEcon$propertyDamage <- stormDataEcon$PROPDMG
+stormDataEcon$cropDamage <- stormDataEcon$CROPDMG
+
+#subset to rows only with damage
+stormDataEcon <- stormDataEcon[stormDataEcon$PROPDMG != 0 | stormDataEcon$CROPDMG != 0,]
+
+for (i in 1:nrow(stormDataEcon))
+{
+    if (stormDataEcon$PROPDMG[i] != 0)
+    {
+        if (stormDataEcon$PROPDMGEXP[i] == "H")
+            stormDataEcon$propertyDamage[i] <- stormDataEcon$PROPDMG[i] * 10^2
+        
+        if (stormDataEcon$PROPDMGEXP[i] == "K")
+            stormDataEcon$propertyDamage[i] <- stormDataEcon$PROPDMG[i] * 10^3
+        
+        if (stormDataEcon$PROPDMGEXP[i] == "M")
+            stormDataEcon$propertyDamage[i] <- stormDataEcon$PROPDMG[i] * 10^6
+        
+        if (stormDataEcon$PROPDMGEXP[i] == "B")
+            stormDataEcon$propertyDamage[i] <- stormDataEcon$PROPDMG[i] * 10^9    
+    }
+    
+    if (stormDataEcon$CROPDMG[i] != 0)
+    {
+        if (stormDataEcon$CROPDMGEXP[i] == "H")
+            stormDataEcon$cropDamage[i] <- stormDataEcon$CROPDMG[i] * 10^2
+        
+        if (stormDataEcon$CROPDMGEXP[i] == "K")
+            stormDataEcon$cropDamage[i] <- stormDataEcon$CROPDMG[i] * 10^3
+        
+        if (stormDataEcon$CROPDMGEXP[i] == "M")
+            stormDataEcon$cropDamage[i] <- stormDataEcon$CROPDMG[i] * 10^6
+        
+        if (stormDataEcon$CROPDMGEXP[i] == "B")
+            stormDataEcon$cropDamage[i] <- stormDataEcon$CROPDMG[i] * 10^9
+    }
+}
+
+#subset the relevant columns
+stormDataEcon <- stormDataEcon[,c("EVTYPE",
+                                  "propertyDamage",
+                                  "cropDamage")]
+
+stormDataEcon$EVTYPE <- factor(stormDataEcon$EVTYPE, 
+                                   levels = stormDataEcon$EVTYPE)
 ```
+
+```
+## Warning in `levels<-`(`*tmp*`, value = if (nl == nL) as.character(labels)
+## else paste0(labels, : duplicated levels in factors are deprecated
+```
+
+```r
+#cost summation aggregrate by ev-type
+economicImpactEventTypeAggregate <- aggregate(stormDataEcon,
+                                              by = list(eventType = stormDataEcon$EVTYPE),
+                                              FUN = function(x){sum(as.numeric(x))})
+
+economicImpactEventTypeAggregate <- 
+   economicImpactEventTypeAggregate[, c("eventType", 
+                                        "propertyDamage",
+                                        "cropDamage")]
+
+
+#sort by totals
+propertyDamageTop <- head(arrange(economicImpactEventTypeAggregate, 
+                                             desc(propertyDamage)), 
+                          n=15)
+
+propertyDamageTop <- propertyDamageTop[,c("eventType", "propertyDamage")]
+propertyDamageTop$eventType <- factor(propertyDamageTop$eventType, 
+                                   levels = propertyDamageTop$eventType, 
+                                   ordered = TRUE)
+
+cropDamageTop <- head(arrange(economicImpactEventTypeAggregate, 
+                                             desc(cropDamage)), 
+                      n=15)
+
+cropDamageTop <- cropDamageTop[,c("eventType", "cropDamage")]
+cropDamageTop$eventType <- factor(cropDamageTop$eventType, 
+                               levels = cropDamageTop$eventType, 
+                               ordered = TRUE)
+
+cropDamageTop
+```
+
+```
+##            eventType  cropDamage
+## 1            DROUGHT 13367566000
+## 2              FLOOD  4974778400
+## 3          HURRICANE  2741410000
+## 4  HURRICANE/TYPHOON  2607872800
+## 5               HAIL  2476029450
+## 6        FLASH FLOOD  1334901700
+## 7       EXTREME COLD  1288973000
+## 8       FROST/FREEZE  1094086000
+## 9         HEAVY RAIN   728169800
+## 10    TROPICAL STORM   677711000
+## 11         HIGH WIND   633561300
+## 12         TSTM WIND   553915350
+## 13    EXCESSIVE HEAT   492402000
+## 14 THUNDERSTORM WIND   398331000
+## 15          WILDFIRE   295472800
+```
+
+```r
+propertyDamageTop
+```
+
+```
+##            eventType propertyDamage
+## 1              FLOOD   143944833550
+## 2  HURRICANE/TYPHOON    69305840000
+## 3        STORM SURGE    43193536000
+## 4            TORNADO    24616945710
+## 5        FLASH FLOOD    15222203910
+## 6               HAIL    14595143420
+## 7          HURRICANE    11812819010
+## 8     TROPICAL STORM     7642475550
+## 9          HIGH WIND     5247860360
+## 10          WILDFIRE     4758667000
+## 11  STORM SURGE/TIDE     4641188000
+## 12         TSTM WIND     4478026440
+## 13         ICE STORM     3642248810
+## 14 THUNDERSTORM WIND     3382654440
+## 15  WILD/FOREST FIRE     3001782500
+```
+
+
+```r
+#plot dual plots
+
+p1 <- qplot(eventType, 
+            data = propertyDamageTop, 
+            weight = propertyDamage, 
+            binwidth = 1, 
+            colour=I("blue"),
+            fill=I("grey"),
+            geom = "bar") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_y_continuous("Property Damage ($US)") + 
+  xlab("Severe Weather Event Type") + 
+  ggtitle("Property Damage Cost  vs\nSevere Weather Events Type\n(U.S. from 1995 - 2011)")
+
+p2 <- qplot(eventType, 
+            data = cropDamageTop, 
+            weight = cropDamage, 
+            binwidth = 1, 
+            colour=I("blue"),
+            fill=I("grey"),
+            geom = "bar") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_y_continuous("Crop Damage ($US)") + 
+  xlab("Severe Weather Event Type") + 
+  ggtitle("Crop Damage Cost vs\nSevere Weather Events Type\n(U.S. from 1995 - 2011)")
+
+grid.arrange(p1, p2, ncol = 2, main = "Economic Effects of Severe Weather Events")
+```
+
+<img src="figure/EconomicEffectsPlot-1.png" title="plot of chunk EconomicEffectsPlot" alt="plot of chunk EconomicEffectsPlot" style="display: block; margin: auto;" />
 
 
 #### Public Health Effects
 
+
+For the health effects of severe weather, we must isolate what parts of the data define this.
+
+Using the code book, ([Storm Events](http://ire.org/nicar/database-library/databases/storm-events/)), we can see that the columns INJURIES and FATALITIES indicate the number of injuries and fatalities caused by the event respectively. We will use these data characteristics to define the effect of severe weather events on public health.
+
+From the following analysis, we can determine that **Tornado** is the severe weather event type that has the greatest effect on the number of injuries and on the number of fatalities.
+
+
+
 ```r
 #subset data for injuries, fatalities and ev-type
+stormDataHealth <- stormData[,c("EVTYPE", "INJURIES", "FATALITIES")]
+
+stormDataHealth$EVTYPE <- factor(stormDataHealth$EVTYPE, 
+                                   levels = stormDataHealth$EVTYPE)
+```
+
+```
+## Warning in `levels<-`(`*tmp*`, value = if (nl == nL) as.character(labels)
+## else paste0(labels, : duplicated levels in factors are deprecated
+```
+
+```r
 #summation aggregrate by ev-type
-#plot 
+healthImpactEventTypeAggregate <- aggregate(stormDataHealth,
+                                            by = list(eventType = stormDataHealth$EVTYPE),
+                                            FUN = function(x){sum(as.numeric(x))})
+
+
+healthImpactEventTypeAggregate <- 
+   healthImpactEventTypeAggregate[, c("eventType", 
+                                        "INJURIES",
+                                        "FATALITIES")]
+
+#sort by totals
+injuriesTop <- head(arrange(healthImpactEventTypeAggregate, desc(INJURIES)), n=15)
+injuriesTop <- injuriesTop[,c("eventType", "INJURIES")]
+injuriesTop$eventType <- factor(injuriesTop$eventType, levels = injuriesTop$eventType, ordered = TRUE)
+
+fatalitiesTop <- head(arrange(healthImpactEventTypeAggregate, desc(FATALITIES)), n=15)
+fatalitiesTop <- fatalitiesTop[,c("eventType", "FATALITIES")]
+fatalitiesTop$eventType <- factor(injuriesTop$eventType, levels = injuriesTop$eventType, ordered = TRUE)
+
+injuriesTop
+```
+
+```
+##            eventType INJURIES
+## 1            TORNADO    20667
+## 2              FLOOD     6758
+## 3     EXCESSIVE HEAT     6391
+## 4          LIGHTNING     4141
+## 5          TSTM WIND     3629
+## 6        FLASH FLOOD     1674
+## 7  THUNDERSTORM WIND     1400
+## 8       WINTER STORM     1292
+## 9  HURRICANE/TYPHOON     1275
+## 10              HEAT     1222
+## 11         HIGH WIND     1083
+## 12          WILDFIRE      911
+## 13              HAIL      713
+## 14               FOG      712
+## 15        HEAVY SNOW      698
+```
+
+```r
+fatalitiesTop
+```
+
+```
+##            eventType FATALITIES
+## 1            TORNADO       1797
+## 2              FLOOD       1511
+## 3     EXCESSIVE HEAT        887
+## 4          LIGHTNING        651
+## 5          TSTM WIND        414
+## 6        FLASH FLOOD        340
+## 7  THUNDERSTORM WIND        241
+## 8       WINTER STORM        237
+## 9  HURRICANE/TYPHOON        235
+## 10              HEAT        223
+## 11         HIGH WIND        202
+## 12          WILDFIRE        191
+## 13              HAIL        130
+## 14               FOG        125
+## 15        HEAVY SNOW        113
 ```
 
 
+
+```r
+#plot dual plots
+p3 <- qplot(eventType, 
+            data = injuriesTop, 
+            weight = INJURIES, 
+            binwidth = 1, 
+            colour=I("blue"),
+            fill=I("grey"),
+            geom = "bar") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_y_continuous("Number of Injuries") + 
+  xlab("Severe Weather Event Type") + 
+  ggtitle("Number of Injuries  vs\nSevere Weather Events Type\n(U.S. from 1995 - 2011)")
+
+p4 <- qplot(eventType, 
+            data = fatalitiesTop, 
+            weight = FATALITIES, 
+            binwidth = 1, 
+            colour=I("blue"),
+            fill=I("grey"),
+            geom = "bar") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_y_continuous("Number of Fatalities") + 
+  xlab("Severe Weather Event Type") + 
+  ggtitle("Number of Fatalities  vs\nSevere Weather Events Type\n(U.S. from 1995 - 2011)")
+
+grid.arrange(p3, p4, ncol = 2, main = "Health Effects of Severe Weather Events")
+```
+
+<img src="figure/HealthEffectsPlot-1.png" title="plot of chunk HealthEffectsPlot" alt="plot of chunk HealthEffectsPlot" style="display: block; margin: auto;" />
+
+### Conclusion
+
+Based on the above results, we can conclude that **tornado** is the severe weather most harmful with respect to population health, and that **flood** and **drought** have the greatest economic consequences.
 
