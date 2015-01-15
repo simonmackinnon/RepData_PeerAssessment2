@@ -220,7 +220,25 @@ In analysing the data, it was found that <strong>tornadoes have the greatest det
 library(R.utils)
 library(lubridate)
 library(dplyr)
-library(ggplot2)
+</code></pre>
+
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;
+## 
+## The following objects are masked from &#39;package:lubridate&#39;:
+## 
+##     intersect, setdiff, union
+## 
+## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter
+## 
+## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union
+</code></pre>
+
+<pre><code class="r">library(ggplot2)
 library(grid)
 library(gridExtra)
 library(lazyeval)
@@ -255,34 +273,10 @@ if (!file.exists(data_filename))
   bunzip2(zip_filename, overwrite=T, remove=F)
 }
 
-print (&quot;Extracted data file information:&quot;)
+print (paste(&quot;Extracted data file information.&quot;, &quot;Created on:&quot;, format(file.info(data_filename)$ctime, &quot;%B %d, %Y %H:%M:%S&quot;), &quot;Modified on: &quot;, format(file.info(data_filename)$mtime, &quot;%B %d, %Y %H:%M:%S&quot;)))
 </code></pre>
 
-<pre><code>## [1] &quot;Extracted data file information:&quot;
-</code></pre>
-
-<pre><code class="r">print (&quot;***************************************************************&quot;)
-</code></pre>
-
-<pre><code>## [1] &quot;***************************************************************&quot;
-</code></pre>
-
-<pre><code class="r">print (paste(&quot;Created on:&quot;, format(file.info(data_filename)$ctime, &quot;%B %d, %Y %H:%M:%S&quot;)))
-</code></pre>
-
-<pre><code>## [1] &quot;Created on: January 13, 2015 17:17:01&quot;
-</code></pre>
-
-<pre><code class="r">print (paste(&quot;Modified on: &quot;, format(file.info(data_filename)$mtime, &quot;%B %d, %Y %H:%M:%S&quot;)))
-</code></pre>
-
-<pre><code>## [1] &quot;Modified on:  January 13, 2015 17:17:19&quot;
-</code></pre>
-
-<pre><code class="r">print (&quot;***************************************************************&quot;)
-</code></pre>
-
-<pre><code>## [1] &quot;***************************************************************&quot;
+<pre><code>## [1] &quot;Extracted data file information. Created on: January 13, 2015 17:17:01 Modified on:  January 13, 2015 17:17:19&quot;
 </code></pre>
 
 <p>We now read the .csv into R.</p>

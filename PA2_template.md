@@ -19,6 +19,26 @@ options(scipen = 999)
 library(R.utils)
 library(lubridate)
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following objects are masked from 'package:lubridate':
+## 
+##     intersect, setdiff, union
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(ggplot2)
 library(grid)
 library(gridExtra)
@@ -55,43 +75,11 @@ if (!file.exists(data_filename))
   bunzip2(zip_filename, overwrite=T, remove=F)
 }
 
-print ("Extracted data file information:")
+print (paste("Extracted data file information.", "Created on:", format(file.info(data_filename)$ctime, "%B %d, %Y %H:%M:%S"), "Modified on: ", format(file.info(data_filename)$mtime, "%B %d, %Y %H:%M:%S")))
 ```
 
 ```
-## [1] "Extracted data file information:"
-```
-
-```r
-print ("***************************************************************")
-```
-
-```
-## [1] "***************************************************************"
-```
-
-```r
-print (paste("Created on:", format(file.info(data_filename)$ctime, "%B %d, %Y %H:%M:%S")))
-```
-
-```
-## [1] "Created on: January 13, 2015 17:17:01"
-```
-
-```r
-print (paste("Modified on: ", format(file.info(data_filename)$mtime, "%B %d, %Y %H:%M:%S")))
-```
-
-```
-## [1] "Modified on:  January 13, 2015 17:17:19"
-```
-
-```r
-print ("***************************************************************")
-```
-
-```
-## [1] "***************************************************************"
+## [1] "Extracted data file information. Created on: January 13, 2015 17:17:01 Modified on:  January 13, 2015 17:17:19"
 ```
 
 We now read the .csv into R.

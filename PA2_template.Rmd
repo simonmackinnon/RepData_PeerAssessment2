@@ -53,12 +53,7 @@ if (!file.exists(data_filename))
   bunzip2(zip_filename, overwrite=T, remove=F)
 }
 
-print ("Extracted data file information:")
-print ("***************************************************************")
-print (paste("Created on:", format(file.info(data_filename)$ctime, "%B %d, %Y %H:%M:%S")))
-print (paste("Modified on: ", format(file.info(data_filename)$mtime, "%B %d, %Y %H:%M:%S")))
-print ("***************************************************************")
-
+print (paste("Extracted data file information.", "Created on:", format(file.info(data_filename)$ctime, "%B %d, %Y %H:%M:%S"), "Modified on: ", format(file.info(data_filename)$mtime, "%B %d, %Y %H:%M:%S")))
 ```
 
 We now read the .csv into R.
