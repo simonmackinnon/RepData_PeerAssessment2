@@ -167,7 +167,7 @@ From this, we can see there are **`r length(evtypeSummaryOfMonthDateList)`** obs
 ```{r EventTypeAnalysis4, echo=TRUE}
 
 head(stormData[grepl("summary of", stormData$EVTYPE, ignore.case = TRUE),], 
-           n=5)
+           n=2)
 
 ```
 

@@ -521,8 +521,8 @@ From this, we can see there are **42** observations where the event type was rec
 
 
 ```r
-stormDataSummaryOfMonthDate <- stormData[grepl("summary of", stormData$EVTYPE, ignore.case = TRUE),]
-head(stormDataSummaryOfMonthDate, n=2)
+head(stormData[grepl("summary of", stormData$EVTYPE, ignore.case = TRUE),], 
+           n=2)
 ```
 
 ```
