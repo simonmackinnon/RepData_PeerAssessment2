@@ -1,6 +1,6 @@
 Reproducible Research: Peer Assessment 2
 ==========================================
-Created by Simon Mackinnon on January 15, 2015
+Created by Simon Mackinnon on January 22, 2015
 [Reproducable Research - Coursera](https://www.coursera.org/course/repdata)
 
 ## Economic and Public Health Effects of Storms and Other Severe Weather Events 
@@ -566,7 +566,7 @@ However, for the purposes of simple analysis, we will consider the EVTYPE values
 
 For the economic effects of severe weather, we must isolate what parts of the data define this.
 
-Using the code book, ([Storm Events](http://ire.org/nicar/database-library/databases/storm-events/)), we can see that the columns PROPDMG and CROPDMG indicate the value of damage to property and crops respectively. Each of those columns is followed by a corresponding *EXP column, which indicates an exponent (H-Hundreds, K-Thousands, M-Millions, B-Billions). 
+We can assume that the columns PROPDMG and CROPDMG indicate the value of damage to property and crops respectively. Each of those columns is followed by a corresponding *EXP column, which indicates an exponent (H-Hundreds, K-Thousands, M-Millions, B-Billions). 
 
 In order to aggregate the property and crop damage costs per event type, a common unit will need to be used (in this case, whole dollars.) In order to do this, two additional columns *propertyDamage* and *cropDamage* will be introduced, which will be the *DMG value multiplied by the appropriate *DMGEXP value.
 
@@ -723,11 +723,17 @@ p1 <- qplot(eventType,
             colour=I("blue"),
             fill=I("grey"),
             geom = "bar") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  theme(axis.text.x=theme_text(angle=90, hjust=1)) + 
   scale_y_continuous("Property Damage ($US)") + 
   xlab("Severe Weather Event Type") + 
   ggtitle("Property Damage Cost  vs\nSevere Weather Events Type\n(U.S. from 1995 - 2011)")
+```
 
+```
+## Error: Use 'element_text' instead. (Defunct; last used in version 0.9.1)
+```
+
+```r
 p2 <- qplot(eventType, 
             data = cropDamageTop, 
             weight = cropDamage, 
@@ -735,15 +741,23 @@ p2 <- qplot(eventType,
             colour=I("blue"),
             fill=I("grey"),
             geom = "bar") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  theme(axis.text.x=theme_text(angle=90, hjust=1)) + 
   scale_y_continuous("Crop Damage ($US)") + 
   xlab("Severe Weather Event Type") + 
   ggtitle("Crop Damage Cost vs\nSevere Weather Events Type\n(U.S. from 1995 - 2011)")
+```
 
+```
+## Error: Use 'element_text' instead. (Defunct; last used in version 0.9.1)
+```
+
+```r
 grid.arrange(p1, p2, ncol = 2, main = "Economic Effects of Severe Weather Events")
 ```
 
-<img src="figure/EconomicEffectsPlot-1.png" title="plot of chunk EconomicEffectsPlot" alt="plot of chunk EconomicEffectsPlot" style="display: block; margin: auto;" />
+```
+## Error in arrangeGrob(..., as.table = as.table, clip = clip, main = main, : object 'p1' not found
+```
 
 
 #### Public Health Effects
@@ -751,7 +765,7 @@ grid.arrange(p1, p2, ncol = 2, main = "Economic Effects of Severe Weather Events
 
 For the health effects of severe weather, we must isolate what parts of the data define this.
 
-Using the code book, ([Storm Events](http://ire.org/nicar/database-library/databases/storm-events/)), we can see that the columns INJURIES and FATALITIES indicate the number of injuries and fatalities caused by the event respectively. We will use these data characteristics to define the effect of severe weather events on public health.
+We can assume that the columns INJURIES and FATALITIES indicate the number of injuries and fatalities caused by the event respectively. We will use these data characteristics to define the effect of severe weather events on public health.
 
 From the following analysis, we can determine that **Tornado** is the severe weather event type that has the greatest effect on the number of injuries and on the number of fatalities.
 
@@ -847,11 +861,17 @@ p3 <- qplot(eventType,
             colour=I("blue"),
             fill=I("grey"),
             geom = "bar") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  theme(axis.text.x=theme_text(angle=90, hjust=1)) + 
   scale_y_continuous("Number of Injuries") + 
   xlab("Severe Weather Event Type") + 
   ggtitle("Number of Injuries  vs\nSevere Weather Events Type\n(U.S. from 1995 - 2011)")
+```
 
+```
+## Error: Use 'element_text' instead. (Defunct; last used in version 0.9.1)
+```
+
+```r
 p4 <- qplot(eventType, 
             data = fatalitiesTop, 
             weight = FATALITIES, 
@@ -859,15 +879,23 @@ p4 <- qplot(eventType,
             colour=I("blue"),
             fill=I("grey"),
             geom = "bar") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  theme(axis.text.x=theme_text(angle=90, hjust=1)) + 
   scale_y_continuous("Number of Fatalities") + 
   xlab("Severe Weather Event Type") + 
   ggtitle("Number of Fatalities  vs\nSevere Weather Events Type\n(U.S. from 1995 - 2011)")
+```
 
+```
+## Error: Use 'element_text' instead. (Defunct; last used in version 0.9.1)
+```
+
+```r
 grid.arrange(p3, p4, ncol = 2, main = "Health Effects of Severe Weather Events")
 ```
 
-<img src="figure/HealthEffectsPlot-1.png" title="plot of chunk HealthEffectsPlot" alt="plot of chunk HealthEffectsPlot" style="display: block; margin: auto;" />
+```
+## Error in arrangeGrob(..., as.table = as.table, clip = clip, main = main, : object 'p3' not found
+```
 
 ### Conclusion
 
